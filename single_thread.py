@@ -26,10 +26,14 @@ def query_nearest(x_loc_yewu, y_loc_yewu):
     flag = False # 用于指示是否找到最近的那个值
     # 考虑到可能存在的问题，需要进行expand 圆形处理。（当前查找的范围放大根号2倍，再处理一次。包含可能遗漏的区域。
     # while(False == flag):
+    expand = 1
     while(not(x_limit_l == 0 and x_limit_r == 1000 and y_limit_l == 0 and y_limit_r == 1000)):
-        x_limit_l, x_limit_r, y_limit_l, y_limit_r = expand_range_plus_one([x_limit_l, x_limit_r, y_limit_l, y_limit_r])
+        x_limit_l, x_limit_r, y_limit_l, y_limit_r = expand_range_plus_one([x_limit_l, x_limit_r, y_limit_l, y_limit_r], expand)
+        expand = expand * 2
         # 查找通过动态变化x_limit_l, x_limit_r, y_limit_l, y_limit_r，单独写一个函数，进行扩展
+        print(x_limit_l, x_limit_r, y_limit_l, y_limit_r)
         sql = 'select id, x_loc, y_loc from user_info where x_block >= {0} and x_block <= {1} and y_block >= {2} and y_block <= {3}'.format(x_limit_l, x_limit_r, y_limit_l, y_limit_r)
+        print(sql)
         cursor.execute(sql)
         datas = cursor.fetchall()
         # TODO 查找距离最近的同学
@@ -65,23 +69,31 @@ def query_nearest(x_loc_yewu, y_loc_yewu):
         return None
 
 # 扩大范围-->1性质扩大
-def expand_range_plus_one(list_of_range):
+def expand_range_plus_one(list_of_range, expand):
     if(list_of_range[0] == 0):
         pass
+    elif(list_of_range[0] >= expand):
+        list_of_range[0] = list_of_range[0] - expand
     else:
-        list_of_range[0] = list_of_range[0] - 1
+        list_of_range[0] = 0
     if(list_of_range[1] == 1000):
         pass
+    elif(list_of_range[2] <= 1000 - expand):
+        list_of_range[1] = list_of_range[1] + expand
     else:
-        list_of_range[1] = list_of_range[1] + 1
+        list_of_range[1] = 1000
     if(list_of_range[2] == 0):
         pass
+    elif(list_of_range[2] >= expand):
+        list_of_range[2] = list_of_range[2] - expand
     else:
-        list_of_range[2] = list_of_range[2] - 1
+        list_of_range[2] = 0
     if(list_of_range[3] == 1000):
         pass
+    elif(list_of_range[3] <= 1000 - expand):
+        list_of_range[3] = list_of_range[3] + expand
     else:
-        list_of_range[3] = list_of_range[3] + 1
+        list_of_range[3] = 1000
     return list_of_range
 
 # 扩大范围-->根号2倍数（按1.5倍数处理）
@@ -96,7 +108,7 @@ def expand_range_times_sqrt2(list_of_range):
         list_of_range[0] = 0
     # x_limit_r
     list_of_range[1] = math.ceil(list_of_range[1] + x_range*1.5/2) #向上取整
-    if(list_of_range[1] > 1000):
+    if(list_of_range[1] >= 1000):
         list_of_range[1] = 1000
     # y_limit_l
     if(list_of_range[2] >= y_range*1.5/2):

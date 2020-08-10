@@ -31,9 +31,9 @@ def query_nearest(x_loc_yewu, y_loc_yewu):
         x_limit_l, x_limit_r, y_limit_l, y_limit_r = expand_range_plus_one([x_limit_l, x_limit_r, y_limit_l, y_limit_r], expand)
         expand = expand * 2
         # 查找通过动态变化x_limit_l, x_limit_r, y_limit_l, y_limit_r，单独写一个函数，进行扩展
-        print(x_limit_l, x_limit_r, y_limit_l, y_limit_r)
+        # print(x_limit_l, x_limit_r, y_limit_l, y_limit_r)
         sql = 'select id, x_loc, y_loc from user_info where x_block >= {0} and x_block <= {1} and y_block >= {2} and y_block <= {3}'.format(x_limit_l, x_limit_r, y_limit_l, y_limit_r)
-        print(sql)
+        # print(sql)
         cursor.execute(sql)
         datas = cursor.fetchall()
         # TODO 查找距离最近的同学
@@ -49,6 +49,7 @@ def query_nearest(x_loc_yewu, y_loc_yewu):
     if(flag): 
         x_limit_l, x_limit_r, y_limit_l, y_limit_r = expand_range_times_sqrt2([x_limit_l, x_limit_r, y_limit_l, y_limit_r])
         sql = 'select id, x_loc, y_loc from user_info where x_block >= {0} and x_block <= {1} and y_block >= {2} and y_block <= {3}'.format(x_limit_l, x_limit_r, y_limit_l, y_limit_r)
+        # print(sql)
         cursor.execute(sql) # 这里不存在rollback的情况，不写try catch了
         datas = cursor.fetchall()
         my_dict = {}

@@ -56,21 +56,18 @@ def yewuyuan_info_interface(locs_of_yewuyuan):
 
     distance_dict = {}
     for i in range(len(locs_of_yewuyuan)):
-        distance_dict[i] = []
+        distance_dict[i+1] = []
     for data in datas:
-        data[0] = int(data[0])
-        data[1] = float(data[1])
-        data[2] = float(data[2])
         all_distance = []
         for yewuyuan in locs_of_yewuyuan:
-            temp_distance = (data[1] - yewuyuan[0]) ** 2 + (data[2] - yewuyuan[1]) ** 2
+            temp_distance = (float(data[1]) - yewuyuan[0]) ** 2 + (float(data[2]) - yewuyuan[1]) ** 2
             all_distance.append(temp_distance)
         nearest_index = all_distance.index(min(all_distance))
-        distance_dict[nearest_index].append(data)
+        distance_dict[nearest_index+1].append(data)
     
     for yewuyuan, loc in zip(range(len(locs_of_yewuyuan)), locs_of_yewuyuan):
-        print('业务员编号：', yewuyuan, '业务员坐标：', loc[0], loc[1])
+        print('业务员编号：', yewuyuan+1, '业务员坐标：', loc[0], loc[1])
         i = 1
-        for user in distance_dict[yewuyuan]:
-            print('用户{0}编号：'.format(i), user[0], '用户坐标：', user[1], user[2])
+        for user in distance_dict[yewuyuan+1]:
+            print('用户{0}编号：'.format(i+1), user[0], '用户坐标：', user[1], user[2])
             i = i+1

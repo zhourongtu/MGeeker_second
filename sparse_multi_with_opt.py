@@ -19,8 +19,24 @@ def xy():
     conn.close()
     # 此时datas为所有用户的数据
     li = []
+    
+    # 这里是业务员地址
+    yewu_number = input('请输入你指定的业务员坐标个数：')
+    yewu_number = int(yewu_number)
+    for i in range(yewu_number):
+        my_str = input('请输入业务员{}的坐标（以空格键分开）：'.format(i+1))
+        my_str = my_str.split(' ')
+        li.append([float(my_str[0]), float(my_str[1])])
+    if(yewu_number < 10):
+        for i in range(10 - yewu_number):
+            li.append([round(random.random() * 1000, 2), round(random.random() * 1000, 2)])
+    
     for data in datas:
         li.append([float(data[1]), float(data[2])])
+    
+    # 按特定index排列
+    my_index = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 20, 21, 22, 23, 24]
+    
     li = np.array(li)
     # return np.array(
     #     [[100, 200], [234, 1245], [423, 124], [123, 974], [578, 294], [1000, 500], [492, 2100], [320, 418], [836, 914]])
@@ -230,11 +246,13 @@ if __name__ == '__main__':
 
     locations = xy()
     DMAT = DMAT(locations)
-    break_points = [6, 10, 16, 20, 24]
+    break_points = [2, 4, 6, 8, 10, 12, 14, 16, 18]
+#     break_points = [0, 3, 6, 24]
+#     break_points = [6, 10, 16, 24]
     population = init_population(len(locations), 90)
 
     t = []
-    for i in range(40001):
+    for i in range(4001):
         # selection
         value = fitness(population, DMAT, break_points, aimFunction)
         population_new = selection(population, value)
@@ -274,5 +292,4 @@ if __name__ == '__main__':
     plt.plot(t)
     # plt.axhline(max(y), linewidth=1, color='r')
     plt.show()
-
 

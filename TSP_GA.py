@@ -213,7 +213,7 @@ class TSP(object):
         self.citys_name = data[data[:, 0] == '湖南省', 2]
         self.city_size = self.citys.shape[0]
 
-    def load_Citys2(self, file='china.csv', delm=';'):
+    def load_Citys2(self, file='user_and_yewuyuan.csv', delm=';'):
         # 中国34城市经纬度
         data = pd.read_csv(file, delimiter=delm, header=None).values
         self.citys = data[:, 1:]
